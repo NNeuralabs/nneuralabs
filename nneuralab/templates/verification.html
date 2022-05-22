@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+    <!--hero section start-->
+    <section class="hero-section full-screen gray-light-bg" style="background: url('../../static/img/bg-illustration.svg')no-repeat bottom center / cover">
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6">
+                    <div class="login-signup-wrap px-4 px-lg-5">
+                        <!-- Heading -->
+                        <h1 class="text-center mb-1 text-white">
+                            Watermark Verification
+                        </h1>
+
+                        <!-- Subheading -->
+                        <p class="text-muted text-center mb-5 text-white">
+                            Verify if a suspected service uses your model
+                        </p>
+
+                        <!-- Form -->
+                        <form class="login-signup-form" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <div class="mb-3 w-100">
+                                    <label for="formFile" class="form-label text-white">Upload Keys & Values</label>
+                                    <input class="form-control" type="file" name="keys_values">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="mb-3 w-100">
+                                    <label class="form-label text-white">
+                                        Suspected API
+                                    </label>
+                                    <input type="text" class="form-control"
+                                            placeholder="Enter API link" name="api_link">
+                                    
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="mb-3 w-100">
+                                    <label class="form-label text-white" for="inlineFormCustomSelect">Training Package</label>
+                                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="framework">
+                                        <option selected>Choose...</option>
+                                        <option value="pytorch">PyTorch</option>
+                                        <option value="tensorflow">TensorFlow</option>
+                                        <option value="sklearn">SkLearn</option>
+                                        <option value="huggingface">HuggingFace</option>
+                                    </select>
+                                </div>
+                                      
+                            </div>
+                            
+
+                            <!-- Submit -->
+                            <button class="btn btn-block secondary-solid-btn border-radius mt-4 mb-3" style="background:#FF5D5D;" type="submit">
+                                Verify
+                            </button>
+
+
+                            
+
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </section>
+    <!--hero section end-->
+
+
+{% endblock %}
