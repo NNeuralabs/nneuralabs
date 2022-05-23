@@ -80,7 +80,6 @@ class verify(View):
         for label, value in zip(labels,res):
             if label == value:
                 counter += 1
-        import pdb;pdb.set_trace()
         watermarked = False
         if counter/len(res) >= threshold:
             watermarked = True
