@@ -50,10 +50,6 @@ class verify(View):
             res.append(response.json())
 
 
-
-
-        #TODO: verification logic
-
         trigger_size = len(res)
         number_labels = 10 #remove hardcode with range from post
         error_rate = 0.001
@@ -76,12 +72,16 @@ class verify(View):
 
 
         threshold = min(threshold, 1)
+
         print(threshold)
         counter = 0
+
+
         for label, value in zip(labels,res):
             if label == value:
                 counter += 1
 
+        print(counter)
         watermarked = False
         if counter/len(res) >= threshold:
             watermarked = True
@@ -94,21 +94,21 @@ class example_marked(APIView):
 
     def post(self, request):
         data = request.data
-        data_np = np.asarray(data)
-        ret = rand.randint(0,9)
 
         model = LeNet()
-        weights = torch.load('models/watermarked.pt') 
+
+        weights = torch.load('models/clean.pt')
         model.load_state_dict(weights)
-        data = np.asarray(data)
-        torch.from_numpy(data)
-        import pdb;pdb.set_trace()
-        pred = model(data)
+        
+        data = torch.Tensor(data)
+        result = model(data)
+        pred = torch.argmax(result)
 
         print(pred)
-        import pdb;pdb.set_trace()
-        
-        return Response(pred, status=200)
+        print(int(pred))
+
+
+        return Response(int(pred), status=200)
 
 
 class example_unmarked(View):
