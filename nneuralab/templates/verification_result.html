@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <!--hero section start-->
+    <section class="hero-section full-screen gray-light-bg" style="background: url('../../static/img/bg-illustration.svg')no-repeat bottom center / cover">
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6">
+                    <div class="login-signup-wrap px-4 px-lg-5">
+                        <!-- Heading -->
+                        <h1 class="text-center mb-1 text-white">
+                            The suspected model is {%if watermarked%}{% else %}not{% endif %} your model
+                        </h1>
+
+                        <!-- Subheading -->
+                        <p class="text-muted text-center mb-5 text-white">
+                            If you have questions about the result or any possible further proceeding please reach out to us!
+                        </p>
+
+                    </div>
+                </div>
+            </div> <!-- / .row -->
+        </div>
+    </section>
+    <!--hero section end-->
+
+
+
+
+
+
+{% endblock %}
