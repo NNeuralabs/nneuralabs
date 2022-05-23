@@ -6,8 +6,16 @@ import pickle
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import torch
-from torch import nn
+from torch import nn, threshold
 from torch.nn import functional as F
+import requests
+import json
+import numpy as np
+import random as rand
+from scipy.special import comb
+from math import floor, sqrt
+from watermarking.utils import LeNet
+#from scipy.special import comb
 # Create your views here.
 
 def index(request):
@@ -33,28 +41,74 @@ class verify(View):
         labels = data['labels']
         keys = data['inputs']
 
+        url = request.POST['api_link']
 
         res = []
         for data in keys:
-            res.append(request.post(data["api_link"], params=None, headers=None, data=image_data))
+            data_list = data.tolist()
+            response = requests.post(url, json=data_list)
+            res.append(response.json())
 
-        print(keys)
 
-        print(labels)
-        import pdb;pdb.set_trace()
-        return render(request, 'landing.html', {})
+
+
+        #TODO: verification logic
+
+        trigger_size = len(res)
+        number_labels = 10 #remove hardcode with range from post
+        error_rate = 0.001
+        precision = 1 / trigger_size
+        threshold = 1 / number_labels
+        S = 0
+
+        for i in range(0, int(threshold * trigger_size) + 1):
+            wrong_detected = ((1 - 1 / number_labels)**(trigger_size - i))
+            S += comb(trigger_size, i) * (1 / (number_labels**i)) * wrong_detected
+        while S < (1 - error_rate) or threshold == 1:
+            old_threshold = threshold
+            threshold += precision
+            old_bound = floor(old_threshold * trigger_size) + 1
+            new_bound = floor(threshold * trigger_size) + 1
+            for i in range(old_bound, new_bound):
+                wrong_detected = (1 - 1 / number_labels)**(trigger_size - i)
+                S += comb(trigger_size, i) * \
+                (1 / number_labels**i) * wrong_detected
+
+
+        threshold = min(threshold, 1)
+        print(threshold)
+        counter = 0
+        for label, value in zip(labels,res):
+            if label == value:
+                counter += 1
+
+        watermarked = False
+        if counter/len(res) >= threshold:
+            watermarked = True
+
+        
+        return render(request, 'verification_result.html', {'watermarked': watermarked})
 
 
 class example_marked(APIView):
 
     def post(self, request):
-        print(request.POST)
-        import pdb;pdb.set_trace()
-        model = torch.load('models/watermarked.pt') 
+        data = request.data
+        data_np = np.asarray(data)
+        ret = rand.randint(0,9)
 
-        prediction = model.predict(request.POST)
-        response_dict = {'prediction': prediction }
-        return Response(response_dict, status=200)
+        model = LeNet()
+        weights = torch.load('models/watermarked.pt') 
+        model.load_state_dict(weights)
+        data = np.asarray(data)
+        torch.from_numpy(data)
+        import pdb;pdb.set_trace()
+        pred = model(data)
+
+        print(pred)
+        import pdb;pdb.set_trace()
+        
+        return Response(pred, status=200)
 
 
 class example_unmarked(View):
