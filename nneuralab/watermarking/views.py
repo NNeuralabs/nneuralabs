@@ -1,3 +1,4 @@
+from turtle import pd
 from django.shortcuts import render
 from django.views import View
 from django.core.files.storage import FileSystemStorage
@@ -48,7 +49,8 @@ class example_marked(APIView):
 
     def post(self, request):
         print(request.POST)
-        model = torch.load('models/watermarked.zip') 
+        import pdb;pdb.set_trace()
+        model = torch.load('models/watermarked.pt') 
 
         prediction = model.predict(request.POST)
         response_dict = {'prediction': prediction }
