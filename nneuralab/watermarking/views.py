@@ -2,6 +2,7 @@ from turtle import pd
 from django.shortcuts import render
 from django.views import View
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
 import pickle
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,6 +16,8 @@ import random as rand
 from scipy.special import comb
 from math import floor, sqrt
 from watermarking.utils import LeNet
+from torch.utils.data import DataLoader
+
 #from scipy.special import comb
 # Create your views here.
 
@@ -26,7 +29,6 @@ class verify(View):
         return render(request, 'verification.html', {})
 
     def post(self, request):
-        #import pdb;pdb.set_trace()
         data = request.POST
         ownership = request.FILES["keys_values"]
        
@@ -38,23 +40,19 @@ class verify(View):
         
         pikd.close()
         
-        labels = data['labels']
+        predictions_reference = data['labels']
         keys = data['inputs']
 
         url = request.POST['api_link']
 
-        res = []
-        for data in keys:
-            data_list = data.tolist()
+        pred_suspect = []
+        for key in keys:
+            data_list = key.tolist()
             response = requests.post(url, json=data_list)
-            res.append(response.json())
+            pred_suspect.append(response.json())
 
 
-
-
-        #TODO: verification logic
-
-        trigger_size = len(res)
+        trigger_size = 100
         number_labels = 10 #remove hardcode with range from post
         error_rate = 0.001
         precision = 1 / trigger_size
@@ -77,15 +75,13 @@ class verify(View):
 
         threshold = min(threshold, 1)
         counter = 0
-        for label, value in zip(labels,res):
+        for label, value in zip(pred_suspect,predictions_reference):
             if label == value:
                 counter += 1
         watermarked = False
-        if counter/len(res) >= threshold:
+        if counter/len(pred_suspect) >= threshold:
             watermarked = True
-
-        # to demo untill the issue is fixed
-        watermarked = True
+        print(counter/len(pred_suspect))
         return render(request, 'verification_result.html', {'watermarked': watermarked})
 
 
@@ -94,13 +90,28 @@ class example_marked(APIView):
     def post(self, request):
         data = request.data
         suspect_model = LeNet()
-        weights = torch.load('models/clean_model.pt')
+        weights = torch.load('models/watermarked_model.pt')
         suspect_model.load_state_dict(weights)
-        data = torch.Tensor(data)
-        result = suspect_model(data)
-        pred = torch.argmax(result)
+        with torch.no_grad():
+            suspect_model.eval()
+            data = torch.Tensor(data)
+            result = suspect_model(data)
+            pred = torch.argmax(result)
         return Response(int(pred), status=200)
 
 class example_unmarked(View):
+    def get(self, request):
+        return render(request, 'verification.html', {})
+
     def post(self, request):
-        return request.data
+        
+        data = request.data
+        suspect_model = LeNet()
+        weights = torch.load('models/clean_model.pt')
+        suspect_model.load_state_dict(weights)
+        with torch.no_grad():
+            suspect_model.eval()
+            data = torch.Tensor(data)
+            result = suspect_model(data)
+            pred = torch.argmax(result)
+        return Response(int(pred), status=200)
