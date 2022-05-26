@@ -17,13 +17,17 @@ from scipy.special import comb
 from math import floor, sqrt
 from watermarking.utils import LeNet
 from torch.utils.data import DataLoader
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 #from scipy.special import comb
 # Create your views here.
 
+
 def index(request):
     return render(request, 'landing.html', {})
 
+@method_decorator(csrf_exempt, name='dispatch')
 class verify(View):
     def get(self, request):
         return render(request, 'verification.html', {})
@@ -84,8 +88,10 @@ class verify(View):
         print(counter/len(pred_suspect))
         return render(request, 'verification_result.html', {'watermarked': watermarked})
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class example_marked(APIView):
+    def get(self, request):
+        return render(request, 'verification.html', {})
 
     def post(self, request):
         data = request.data
@@ -99,12 +105,12 @@ class example_marked(APIView):
             pred = torch.argmax(result)
         return Response(int(pred), status=200)
 
-class example_unmarked(View):
+@method_decorator(csrf_exempt, name='dispatch')
+class example_unmarked(APIView):
     def get(self, request):
         return render(request, 'verification.html', {})
 
     def post(self, request):
-        
         data = request.data
         suspect_model = LeNet()
         weights = torch.load('models/clean_model.pt')
