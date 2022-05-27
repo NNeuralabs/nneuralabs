@@ -1,4 +1,144 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% include 'partials/index.html' %}
+{% load static %}
+
+
+<section class="hero-section full-screen gray-light-bg"  style="background: url('../../static/img/bg-illustration.svg')no-repeat bottom center / cover">
+    <div class="hero-bottom-shape-two" style="background: url('img/hero-bottom-shape.svg')no-repeat bottom center"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-12 col-lg-6">
+                <div class="hero-slider-content text-white z-index position-relative">
+                    <h1 class="text-white">NNeuralabs</h1>
+                    <p class="lead"> Protect your deep learning models against plagiarism and copyright infringement with our state-of-the-art watermarking technology!</p>
+
+                    <div class="action-btns mt-3">
+                        <a href="index.html#" class="btn accent-solid-btn">Get Start Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <div class="hero-animation-img">
+                    <img src="{% static "img/hero-single-img-3.svg" %}" alt="hero single" class="custom-width img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--hero section end-->
+
+<!--services section start-->
+<section class="services-section ptb-100 gray-light-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="section-heading text-center mb-5">
+                    <h2>Model Protection Services</h2>
+                    <p class="lead">Protect your deep learning infrastructure against various kinds of attacks attempting to steal your models. Then store your ownership information on our blockchain to make it credible</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="services-single animated-hover text-center p-5 my-md-3 my-lg-3 my-sm-0 shadow-sm white-bg rounded">
+                    <img src="{% static "img/artificial-intelligence.svg" %}" alt="consulting" width="80" class="mb-3">
+                    <h5>Training Watermarks</h5>
+                    <p class="mb-0">Implant your ownership information while training the models and choose from different techniques                 
+
+                    </p>
+                    <a href="services-details.html" target="_blank" class="detail-link mt-4">Read more <span class="ti-arrow-right"></span></a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="services-single animated-hover text-center p-5 my-md-3 my-lg-3 my-sm-0 shadow-sm white-bg rounded">
+                    <img src="{% static "img/machine-learning.svg" %}" alt="consulting" width="80" class="mb-3">
+                    <h5>API Watermarks</h5>
+                    <p class="mb-0">Protect your API against the rising power and accuracy of model extraction attacks</p>
+                    <a href="services-details.html" target="_blank" class="detail-link mt-4">Read more <span class="ti-arrow-right"></span></a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="services-single animated-hover text-center p-5 my-md-3 my-lg-3 my-sm-0 shadow-sm white-bg rounded">
+                    <img src="{% static "img/data-security.svg" %}" alt="consulting" width="80" class="mb-3">
+                    <h5>Verification</h5>
+                    <p class="mb-0">Provide us with some information about a suspected  and we verify the ownership for you</p>
+                    <a href="services-details.html" target="_blank" class="detail-link mt-4">Read more <span class="ti-arrow-right"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--services section end-->
+
+<!--our work process section start-->
+<section class="work-process-new ptb-100 gray-light-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-8">
+                <div class="section-heading text-center mb-5">
+                    <h2>Watermarking Process</h2>
+                    <p class="lead">4 steps to take the security of your deep learning infrastructure to a new level</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="work-process-wrap text-center">
+                    <div class="single-work-process">
+                        <div class="work-process-icon-wrap secondary-bg rounded">
+                            <i class="ti-vector icon-md text-white"></i>
+                            <span class="process-step white-bg color-primary shadow-sm">1</span>
+                        </div>
+                        <span class="work-process-divider"></span>
+                        <div class="work-process-content mt-4">
+                            <h5>Download our python package</h5>
+                            <p>Download and test our python package for free with only one click</p>
+                        </div>
+                    </div>
+                    <div class="single-work-process">
+                        <div class="work-process-icon-wrap secondary-bg rounded">
+                            <i class="ti-layout-list-thumb icon-md text-white"></i>
+                            <span class="process-step white-bg color-primary shadow-sm">2</span>
+                        </div>
+                        <span class="work-process-divider"></span>
+                        <div class="work-process-content mt-4">
+                            <h5>Create your ownership information</h5>
+                            <p>Create your your ownership information for free with only a few lines of code</p>
+                        </div>
+                    </div>
+                    <div class="single-work-process">
+                        <div class="work-process-icon-wrap secondary-bg rounded">
+                            <i class="ti-palette icon-md text-white"></i>
+                            <span class="process-step white-bg color-primary shadow-sm">3</span>
+                        </div>
+                        <span class="work-process-divider"></span>
+                        <div class="work-process-content mt-4">
+                            <h5>Store your ownership information</h5>
+                            <p>Create an account and store your ownership information on our blockchain for maximal credibility</p>
+                        </div>
+                    </div>
+                    <div class="single-work-process">
+                        <div class="work-process-icon-wrap secondary-bg rounded">
+                            <i class="ti-cup icon-md text-white"></i>
+                            <span class="process-step white-bg color-primary shadow-sm">4</span>
+                        </div>
+                        <span class="work-process-divider"></span>
+                        <div class="work-process-content mt-4">
+                            <h5>Verify your ownership and sue your model thiefs</h5>
+                            <p>Convict suspected services and sue them backed on our expert opinion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--our work process section end-->
+
+
+
+
+
+
+
 {% endblock %}

@@ -19,6 +19,8 @@ from watermarking.utils import LeNet
 from torch.utils.data import DataLoader
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+import gzip
 
 #from scipy.special import comb
 # Create your views here.
@@ -121,3 +123,22 @@ class example_unmarked(APIView):
             result = suspect_model(data)
             pred = torch.argmax(result)
         return Response(int(pred), status=200)
+
+
+class example_model_extraction(View):
+    def get(self, request):
+        return render(request, 'extraction.html')
+
+    def post(self, request):
+        data_sample = request.FILES['data_sample']
+        print(data_sample)
+        f = gzip.open(data_sample,'r')
+        image_size = 28
+        num_images = 60000
+
+        f.read(8)
+        buf = f.read(image_size * image_size * num_images)
+        data = np.frombuffer(buf, dtype=np.uint8).astype(np.float32)
+        data = data.reshape(num_images, image_size, image_size, 1)
+        import pdb;pdb.set_trace()
+        return HttpResponse("Worked")
