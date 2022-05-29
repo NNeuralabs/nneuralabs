@@ -20,8 +20,8 @@ from torch.utils.data import DataLoader
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout 
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
 import gzip
 
 #from scipy.special import comb
@@ -30,6 +30,22 @@ import gzip
 
 def index(request):
     return render(request, 'landing.html', {})
+
+class login_request(View):
+    def get(self, request):
+        return render(request, 'login.html', {})
+    
+    def post(self, request):
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return render(request, 'landing.html', {})
+
+        return render(request, 'login.html', {})
 
 
 class register(View):
@@ -45,6 +61,12 @@ class register(View):
         return self.get(request)
 
 
+class logout_request(View):
+    def get(self, request):
+        logout(request)
+        return render(request, 'landing.html', {})
+
+   
 @method_decorator(csrf_exempt, name='dispatch')
 class verify(View):
     def get(self, request):
