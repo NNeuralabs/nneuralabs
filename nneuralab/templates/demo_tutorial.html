@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+    <section class="hero-section ptb-100 gradient-overlay"
+             style="background-color: #8800FF">
+        <div class="hero-bottom-shape-two" style="background: url('img/hero-bottom-shape.svg')no-repeat bottom center"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="page-header-content text-white text-center pt-sm-5 pt-md-5 pt-lg-0">
+                        <h1 class="text-white mb-0">Verification Demo Tutorial</h1>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--header section end-->
+
+    <!--blog section start-->
+    <div class="module ptb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-2">
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <!-- Post-->
+                    <article class="post">
+                        <div class="post-wrapper">
+                            <div class="post-content">
+                                <p>With the verification demo you have the opportunity to test and play around with our <a href="https://www.django-rest-framework.org/">watermarking package</a>. It serves as a playground for anyone interested in the watermarking of neural networks. In this tutorial you'll learn how to use this demo and have fun with watermarking yourselfs! &#128526;</p>
+                                <br>
+                                <p>There are 3 easy steps you need to take for working with our verification demo:</p>
+                                <ol>
+                                    <li>Watermark your deep learning model with the neuralwatermark package and put the returned ownership information into a pickel file</li>
+                                    <li>Build a prediction API for your model</li>
+                                    <li>Enter the API-link and yourn ownership file to the verification demo and you're ready to go!</li>
+                                </ol>
+                                <br>
+                                <h5>1. Watermark your DL model</h5>
+                                <p>In this tutorial we skip the part of how to watermark your DL model since all the information is already contained in the <a href="https://skp-github.github.io/neuralwatermark/">neuralwatermark documentation</a>. So feel free to visit!</p>
+                                <p>You also need to store your watermarked model in order to use it for the prediction API. For example you could store it in a pickel file with the following command:</p>
+                                <br>
+                                <code>torch.save(model.state_dict(), PATH)</code>
+                                <br>
+                                <br>
+                                <p>Now that your model is saved we can go on to build a prediction API for your model!</p>
+                                <br>
+                                <br>
+                                <h5>2. Building prediction API</h5>
+                                <p>Now that you have the model ready, you need to build a prediction API for your model. For the verification demo you need to build this API with the <a href="https://www.django-rest-framework.org/">Django REST framework</a>. For our core service however, it doesn't matter how the API of your suspect was built. This tutorial will mainly focus on building a prediction API with the Django REST framework</p>
+                                <p>This requires the installation of django as well as the django rest framework. Just execute the below commands in your terminal and you're ready to go!</p>
+                                <br>
+                                <p><code>pip install django </code></p>
+                                <p><code>pip install django-rest-framework </code></p>
+                                <br>
+                                <p>Now that your have everything installed you need to setup a django project and create a django app. For this we recommend taking a look at this <a href="https://docs.djangoproject.com/en/4.0/intro/tutorial01/">tutorial</a> on the official django webpage</p> 
+                                <p>To now use the django rest framework you need to add the rest_framework app to <code>INSTALLED_APPS</code> in the settings.py file of your project. <code>INSTALLED_APPS</code> should then look like this:</p>
+                                <br>
+                                <p>Now you can create a new view in your app. This looks like the following:</p>
+                                <p>It's important that the class of the view inherits from <code>APIView</code>. Also you only need to define the post method to allow for querying the prediction API. In the post method then can look like this:
+
+                                <p>This is just an example for one specific case. In general your post-method should cover the following steps<p>
+                                    <ol>
+                                        <li>Get the input data from the post-request</li>
+                                        <li>Load and unpack your model (Make sure to have your model class imported)</li>
+                                        <li>Query the model with the input data</li>
+                                        <li>Respond with the results of your query</li>
+                                    </ol>
+                                <div>
+
+                                        *Emphasized* text.
+                                        
+                                </div>
+                                <p>You should always test your API by running the server, going to the url and inputting some data.</p>
+                                <p>Now that your prediction API works, you can go on to the next step!</p>
+                                <br>
+                                <h5>3. Enter information and get started!</h5>
+                                <p>Just go to the <a href="/verify">verification demo<a>, enter your ownership information and the API link and get started!</p>
+                                <br>
+                                <br>
+                                <p>We hope you enjoyed the tutorial and wish you a funny and interesting experience with our verification demo. If you're interested in our service of model protection and credible ownership verification in a real world setting, feel free to contact us!</p>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- Post end-->
+
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--blog section end-->
+
+</div>
+<!--body content wrap end-->
+
+
+    
+
+
+<!--bottom to top button start-->
+<button class="scroll-top scroll-to-target" data-target="html">
+    <span class="ti-angle-up"></span>
+</button>
+<!--bottom to top button end-->
+
+<!--jQuery-->
+<script src="js/jquery-3.4.1.min.js"></script>
+<!--Popper js-->
+<script src="js/popper.min.js"></script>
+<!--Bootstrap js-->
+<script src="js/bootstrap.min.js"></script>
+<!--Magnific popup js-->
+<script src="js/jquery.magnific-popup.min.js"></script>
+<!--jquery easing js-->
+<script src="js/jquery.easing.min.js"></script>
+<!--jquery ytplayer js-->
+<script src="js/jquery.mb.YTPlayer.min.js"></script>
+<!--Isotope filter js-->
+<script src="js/mixitup.min.js"></script>
+<!--wow js-->
+<script src="js/wow.min.js"></script>
+<!--owl carousel js-->
+<script src="js/owl.carousel.min.js"></script>
+<!--countdown js-->
+<script src="js/jquery.countdown.min.js"></script>
+<!--custom js-->
+<script src="js/scripts.js"></script>
+</body>
+</html>
+
+{% endblock %}
