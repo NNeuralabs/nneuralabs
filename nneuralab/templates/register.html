@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<section class="hero-section full-screen gray-light-bg" style="background: url('../../static/img/bg-illustration.svg')no-repeat bottom center / cover">
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-md-5 col-lg-6 col-xl-4 px-lg-6">
+                <div class="login-signup-wrap px-4 px-lg-5">
+                    <!-- Heading -->
+                    <h1 class="text-center mb-1 text-white">
+                        Create Your Account
+                    </h1>
+
+                    <!-- Subheading -->
+                    <p class="text-muted text-center mb-5 text-white">
+                        If you already have an account, <a href="/login" class="link-light">Login</a>
+                    </p>
+
+                    <!-- Form -->
+                    <form class="login-signup-form" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="mb-3 w-100">
+                                <label class="form-label text-white">
+                                    Your Name
+                                </label>
+                                <input type="text" class="form-control"
+                                        placeholder="Enter your name" name="username">
+                                
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="mb-3 w-100">
+                                <label class="form-label text-white">
+                                    Email Address
+                                </label>
+                                <input type="email" class="form-control"
+                                        placeholder="name@address.com" name="email">
+                                
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="mb-3 w-100">
+                                <label class="form-label text-white">
+                                    Password
+                                </label>
+                                <input type="password" class="form-control"
+                                        placeholder="Enter your password" name="password1">
+                                
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="mb-3 w-100">
+                                <label class="form-label text-white">
+                                    Password (Confirmation)
+                                </label>
+                                <input type="password" class="form-control"
+                                        placeholder="Repeat password" name="password2">
+                                
+                            </div>
+                        </div>
+
+                        <div class="form-check d-flex align-items-center text-center text-white">
+                            <input type="checkbox" class="form-check-input mt-0 mr-3" id="exampleCheck1">
+                            <label class="form-check-label small" for="exampleCheck1">I agree your terms and conditions</a></label>
+                        </div>
+
+                        <!-- Submit -->
+                        <button class="btn btn-block secondary-solid-btn border-radius mt-4 mb-3" style="background:#FF5D5D;" type="submit">
+                            Register
+                        </button>
+
+
+                        
+
+                    </form>
+                </div>
+            </div>
+        </div> <!-- / .row -->
+    </div>
+</section>
+
+
+{% endblock %}

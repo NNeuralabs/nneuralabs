@@ -15,10 +15,15 @@ import numpy as np
 import random as rand
 from scipy.special import comb
 from math import floor, sqrt
-from watermarking.utils import LeNet
+from watermarking.utils import LeNet, Net
 from torch.utils.data import DataLoader
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
+import gzip
+import os
 
 #from scipy.special import comb
 # Create your views here.
@@ -27,37 +32,71 @@ from django.utils.decorators import method_decorator
 def index(request):
     return render(request, 'landing.html', {})
 
+class login_request(View):
+    def get(self, request):
+        return render(request, 'login.html', {})
+    
+    def post(self, request):
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return render(request, 'landing.html', {})
+
+        return render(request, 'login.html', {})
+
+
+class register(View):
+    def get(self, request):
+        return render(request, 'register.html', {})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return render(request, 'register_success.html', {})
+        return self.get(request)
+
+
+class logout_request(View):
+    def get(self, request):
+        logout(request)
+        return render(request, 'landing.html', {})
+
+   
 @method_decorator(csrf_exempt, name='dispatch')
 class verify(View):
     def get(self, request):
         return render(request, 'verification.html', {})
 
     def post(self, request):
+        batch_size = 1
         data = request.POST
         ownership = request.FILES["keys_values"]
-       
         fs = FileSystemStorage()
-        fs.save(ownership.name, ownership)
-
-        pikd = open('public/media/ownership.pickle', 'rb')
-        data = pickle.load(pikd)
-        
-        pikd.close()
+        filename = fs.save(ownership.name, ownership)
+        with open(os.path.join('public/media/', filename), 'rb') as f:
+            data = pickle.load(f)
         
         predictions_reference = data['labels']
         keys = data['inputs']
 
         url = request.POST['api_link']
-
+        key_loader = DataLoader(keys, batch_size=batch_size, shuffle=False)
         pred_suspect = []
-        for key in keys:
-            data_list = key.tolist()
+        for _ , batch in enumerate(key_loader):
+            data_list = batch.tolist()
             response = requests.post(url, json=data_list)
-            pred_suspect.append(response.json())
+            
+            pred_suspect += list(response.json())
 
-
+        
         trigger_size = 100
-        number_labels = 10 #remove hardcode with range from post
+        number_labels = 10
         error_rate = 0.001
         precision = 1 / trigger_size
         threshold = 1 / number_labels
@@ -88,36 +127,68 @@ class verify(View):
         print(counter/len(pred_suspect))
         return render(request, 'verification_result.html', {'watermarked': watermarked})
 
-@method_decorator(csrf_exempt, name='dispatch')
-class example_marked(APIView):
-    def get(self, request):
-        return render(request, 'verification.html', {})
 
+class example_marked_custom(APIView):
     def post(self, request):
         data = request.data
         suspect_model = LeNet()
-        weights = torch.load('models/watermarked_model.pt')
+        weights = torch.load('models/marked_custom_model.pt')
         suspect_model.load_state_dict(weights)
         with torch.no_grad():
             suspect_model.eval()
             data = torch.Tensor(data)
             result = suspect_model(data)
-            pred = torch.argmax(result)
-        return Response(int(pred), status=200)
+            pred = []
+            for res in result:
+                pred.append(int(torch.argmax(res)))  
+        return Response(pred, status=200)
 
-@method_decorator(csrf_exempt, name='dispatch')
-class example_unmarked(APIView):
-    def get(self, request):
-        return render(request, 'verification.html', {})
 
+class example_unmarked_custom(APIView):
     def post(self, request):
         data = request.data
         suspect_model = LeNet()
-        weights = torch.load('models/clean_model.pt')
+        weights = torch.load('models/clean_custom_model.pt')
         suspect_model.load_state_dict(weights)
         with torch.no_grad():
             suspect_model.eval()
             data = torch.Tensor(data)
             result = suspect_model(data)
-            pred = torch.argmax(result)
-        return Response(int(pred), status=200)
+            pred = []
+            for res in result:
+                pred.append(int(torch.argmax(res)))  
+        return Response(pred, status=200)
+
+class example_marked_noise(APIView):
+    def post(self, request):
+        data = request.data
+        suspect_model = Net()
+        weights = torch.load('models/marked_noise_model.pt')
+        suspect_model.load_state_dict(weights)
+        with torch.no_grad():
+            suspect_model.eval()
+            data = torch.Tensor(data)
+            result = suspect_model(data)
+            pred = []
+            for res in result:
+                pred.append(int(torch.argmax(res)))       
+        return Response(pred, status=200)
+
+class example_unmarked_noise(APIView):
+    def post(self, request):
+        data = request.data
+        suspect_model = Net()
+        weights = torch.load('models/model.pt')
+        suspect_model.load_state_dict(weights)
+        with torch.no_grad():
+            suspect_model.eval()
+            data = torch.Tensor(data)
+            result = suspect_model(data)
+            pred = []
+            for res in result:
+                pred.append(int(torch.argmax(res)))
+        return Response(pred, status=200)
+
+class demo_tutorial(View):
+    def get(self, request):
+        return render(request, 'demo_tutorial.html', {})

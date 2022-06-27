@@ -1,9 +1,9 @@
 {% load static %}
 <header class="header">
     <!--start navbar-->
-    <nav class="navbar navbar-expand-lg fixed-top bg-transparent">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
+    <nav class="navbar navbar-expand-lg fixed-top bg-transparent" >
+        <div class="container" >
+            <a class="navbar-brand" href="http://127.0.0.1:8000/">
                 <img src="{% static "/img/logo.svg" %}" alt="logo" class="img-fluid" height="20%" width="20%"/>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -12,12 +12,16 @@
             </button>
             <div class="collapse navbar-collapse h-auto" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto menu">
-                    <li><a href="#" class="dropdown-toggle"> Home</a>
-                        <ul class="sub-menu">
-                            
-                        </ul>
-                    </li>
+                    <li><a href="/"> Home</a>
+                    <li><a  href="/verify">Verificiation Demo</a></li>
                     <li><a  href="#">About Us</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a  href="/logout">Logout</a></li>
+                    {% else %}
+                    <li><a  href="/register">Register</a></li>
+                    <li><a  href="/login">Login</a></li>
+                    {% endif %}
+                    
                 </ul>
             </div>
         </div>
